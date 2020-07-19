@@ -5,17 +5,22 @@
     <title>Index Page</title>
     <style type="text/css">
         * { font-family: Roboto; }
+        div.container { position: absolute; left: 20vw; top:0; width: 60vw;}
     </style>
   </head>
   <body>
-    <h1>Index</h1>
-    <h3>Your options:</h3>
-    <ul>
-      <li>POST your query to <strong>create/</strong> or <strong>read/</strong> or <strong>update/</strong> or <strong>deleteOne/</strong> or <strong>deleteMany/</strong></li>
-      <li>POST to <strong>read/limit/</strong>your limit<strong>/skip/</strong>how many to skip</li>
-      <li>GET <strong>all/</strong> or <strong>all/limit/</strong>your limit<strong>/skip/</strong>how many to skip</li>
-      <li>POST your serch query to <strong>find/</strong></li>
-      <li>GET <strong>stats/time/ratings/</strong> or <strong>stats/author/ratings/</strong></li>
-    </ul>
+    <div class="container">
+      <h1>Index</h1>
+      <h3>Your options:</h3>
+      <ul>
+        <li>POST your document to <strong>create/</strong></li>
+        <li>GET query as request to <strong>read/</strong> or <strong>update/</strong> or <strong>deleteOne/</strong> or <strong>deleteMany/</strong></li>
+        <li>GET <strong>all/</strong></li>
+        <li>POST to <strong>read/page/</strong>which page<strong>/limit/</strong>your limit</li>
+        <li>POST to <strong>all/page/</strong>which page<strong>/limit/</strong>your limit</li>
+        <li>POST your serch query to <strong>find/</strong></li>
+        <li>GET <strong>stats/time/ratings/</strong> or <strong>stats/author/ratings/</strong></li>
+      </ul>
+    </div>
   </body>
 </html>
