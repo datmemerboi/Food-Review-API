@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 mongoose.connect("mongodb://localhost/Bewgle", {useNewUrlParser: true, useUnifiedTopology: true});
-
+const Schema = mongoose.Schema;
+const mongooseAggregatePaginate = require('mongoose-aggregate-paginate-v2');
 
 var reviewSchema = new Schema({
   rid: mongoose.ObjectId,
@@ -14,6 +14,8 @@ var reviewSchema = new Schema({
   author: String,
   verified: Boolean
 });
+
+reviewSchema.plugin(mongooseAggregatePaginate)
 
 var reviewModel = mongoose.model('reviews', reviewSchema);
 
