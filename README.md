@@ -9,12 +9,14 @@ Run `npm install && npm start` or `npm install && node src/app.js PORT_NUMBER` t
 Go to `http://localhost:8080` (default) or `http://localhost:PORT_NUMBER` for instructions.
 
 ### API Endpoints
-* create/, read/ update/, delteOne/, deleteMany/
-* all/
-* find/
-* stats/sku/{which sku}/ratings/
-* stats/author/ratings/
-* stats/time/ratings/
+* create, read, update, delteOne, deleteMany
+* all
+* find
+* stats/sku/{which sku}/ratings
+* stats/author/ratings
+* stats/time/ratings
+
+**Note**: you can provide query parameters such as `?limit=10` or `?page=2`.
 
 ### File Description
 
