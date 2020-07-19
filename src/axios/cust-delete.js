@@ -1,20 +1,20 @@
 const axios = require('axios');
 
-var sampleData = {
+var query = {
   author: { $eq:"Munna<3Food" }
 }
 
-axios.post('http://localhost:8080/deleteMany', sampleData)
+axios.post('http://localhost:8080/deleteOne', query)
+  .then((res) => {
+    console.log(res.status);
+  })
+  .catch(err=>{
+    console.log(err);
+  })
+  axios.post('http://localhost:8080/deleteMany', query)
   .then((res) => {
     console.log(res.status);
   })
   .catch(err => {
     console.log(err);
   })
-// axios.post('http://localhost:8080/deleteOne', sampleData)
-//   .then((res) => {
-//     console.log(res.status);
-//   })
-//   .catch(err=>{
-//     console.log(err);
-//   })
