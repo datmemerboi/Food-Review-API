@@ -4,52 +4,44 @@ const name = {
   createDocFn: (doc) => {
     return schemaModel.reviewModel.create(doc);
   },
-  readFn: (query, limit=5, skip=0) => {
-    return schemaModel.reviewModel.aggregate([
-      { $match:query },
-      { $limit:limit },
-      { $skip:skip }
-    ]).exec();
+  readFn: (query, page=1, limit=5) => {
+    var aggregateQuery = schemaModel.reviewModel.aggregate([{ $match: query }]);
+    return schemaModel.reviewModel.aggregatePaginate(aggregateQuery, {page:page, limit:limit});
   },
   updateFn: (query, updQuery) => {
     return schemaModel.reviewModel.updateOne(query, updQuery).exec();
   },
-  deleteOneFn: (query) => {
+  deleteOneFn: (query, skip=0) => {
     return schemaModel.reviewModel.deleteOne(query).exec();
   },
   deleteManyFn: (query, limit=100) => {
     return schemaModel.reviewModel.deleteMany(query, { limit:limit }).exec();
   },
-  allFn: (query, limit=10, skip=0) => {
-    return schemaModel.reviewModel.aggregate([
-      { $match:query },
-      { $limit:limit },
-      { $skip:skip }
-    ]).exec();
+  allFn: (query, page=1, limit=10) => {
+    var aggregateQuery = schemaModel.reviewModel.aggregate([{ $match:query } ]);
+    return schemaModel.reviewModel.aggregatePaginate(aggregateQuery, {page:page, limit:limit});
   },
-  specificFindFn: (query, specific, limit=4, skip=0) => {
+  findSpecificFn: (query, specific, page=1, limit=5, skip=0) => {
     return schemaModel.reviewModel.find(query, specific, { limit:limit, skip:skip }).exec();
   },
-  authorRatingFn: (query, limit=10, skip=0) => {
-    return schemaModel.reviewModel.aggregate([
+  authorRatingFn: (query, page=1, limit=10) => {
+    var aggregateQuery =  schemaModel.reviewModel.aggregate([
       { $match:query },
       { $group: {
         _id:"$author",
         average: { $avg:"$rating" },
         eachRating: { $push:"$rating" },
         eachSKU: { $push:"$sku" },
-      } },
-      { $limit:limit },
-      { $skip:skip },
-    ]).exec();
+      } }
+    ]);
+    return schemaModel.reviewModel.aggregatePaginate(aggregateQuery, {page:page, limit:limit});
   },
-  timeRatingFn: (query, limit=20, skip=0) => {
-      return schemaModel.reviewModel.aggregate([
+  timeRatingFn: (query, page=1, limit=10) => {
+      var aggregateQuery = schemaModel.reviewModel.aggregate([
         { $match:query },
         { $group: { _id:"$rating", timeDist: { $push:"$date" } } },
-        { $limit:limit },
-        { $skip:skip }
-      ]).exec();
+      ]);
+      return schemaModel.reviewModel.aggregatePaginate(aggregateQuery, {page:page, limit:limit});
   },
   skuRatingFn: (query) => {
     return schemaModel.reviewModel.aggregate([
