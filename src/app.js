@@ -27,20 +27,21 @@ router.post('/create', (req, res) => {
   res.sendStatus(200);
 });
 
-router.post('/read', (req,res) => {
-  interMod.readFn(req.body).then(doc => {
+router.all('/read', (req,res) => {
+  var page = parseInt(req.query.page )|| 1; var limit = parseInt(req.query.limit) || 5;
+  interMod.readFn(req.body, page=page, limit=limit).then(doc => {
     console.log(typeof(doc));
     return res.status(200).json(doc);
   }).catch(err => { console.log(err); });
 });
 
-router.post('/read/limit/:lt/skip/:sk', (req,res) => {
-  interMod.readFn(req.body, limit=req.params.lt, skip=req.params.sk).then(doc => {
+router.post('/read/page/:pg/limit/:lt', (req,res) => {
+  interMod.readFn(req.body, page=parseInt(req.params.pg), limit=parseInt(req.params.lt)).then(doc => {
     return res.status(200).json(doc);
   }).catch(err => { console.log(err); });
 });
 
-router.post('/update', (req, res) => {
+router.all('/update', (req, res) => {
   if(req.body.length>1){
     var query = req.body[0]; var updQuery = req.body[1];
     interMod.updateFn(query, updQuery).then(res=>{
@@ -51,57 +52,64 @@ router.post('/update', (req, res) => {
   else{ res.sendStatus(404); };
 });
 
-router.post('/deleteOne', (req, res) => {
-  interMod.deleteOneFn(req.body).then(res => {
+router.all('/deleteOne', (req, res) => {
+  var skip = parseInt(req.query.skip) || 0;
+  interMod.deleteOneFn(req.body, skip=skip).then(res => {
     console.log("One record removed!");
   }).catch(err => { console.log(err); });
   res.sendStatus(200);
 });
 
-router.post('/deleteMany', (req,res) => {
-  interMod.deleteManyFn(req.body).then(res => {
+router.all('/deleteMany', (req,res) => {
+  var limit = parseInt(req.query.limit) || 100;
+  interMod.deleteManyFn(req.body, limit=limit).then(res => {
     console.log("Multiple records removed!");
   }).catch(err => { console.log(err); });
   res.sendStatus(200);
 });
 
 router.all('/all', (req,res) => {
+  var page = parseInt(req.query.page) || 1; var limit = parseInt(req.query.limit) || 10;
   interMod.allFn({}).then((docs) => {
     if(!docs){ throw new Error("No documents available!") }
     return res.status(200).json(docs);
   }).catch(err => { console.log(err); });
 });
 
-router.all('/all/limit/:lt/skip/:sk', (req,res) => {
-  interMod.allFn({}, limit=parseInt(req.params.lt), skip=parseInt(req.params.sk)).then((docs) => {
+router.post('/all/page/:pg/limit/:lt', (req,res) => {
+  interMod.allFn({}, page=parseInt(req.params.pg), limit=parseInt(req.params.lt)).then((docs) => {
     if(!docs){ throw new Error("No more documents!") }
     return res.status(200).json(docs);
   }).catch(err => { console.log(err); });
 });
 
-router.post('/find', (req,res) => {
+router.all('/find', (req,res) => {
   if(req.body.length>1){
-    interMod.specificFindFn(req.body[0], req.body[1]).then(doc => {
+    var page = parseInt(req.query.page) || 1; var limit = parseInt(req.query.limit) || 5;
+    var skip = parseInt(req.query.skip) || 0;
+    interMod.findSpecificFn(req.body[0], req.body[1], page=page, limit=limit, skip=skip).then(doc => {
       return res.status(200).json(doc)
     }).catch(err => { console.log(err); });
   }
   else { res.sendStatus(404); }
 });
 
+router.all('/stats/author/ratings', (req,res) => {
+  var page = parseInt(req.query.page) || 1; var limit = parseInt(req.query.limit) || 10;
+  interMod.authorRatingFn({}, page=page, limit=limit).then(docs => {
+    return res.status(200).json(docs);
+  }).catch(err => { console.log(err); });
+});
+
 router.all('/stats/time/ratings', (req,res) => {
-  interMod.timeRatingFn({}).then(docs => {
+  var page = parseInt(req.query.page) || 1; var limit = parseInt(req.query.limit) || 10;
+  interMod.timeRatingFn({}, page=page, limit=limit).then(docs => {
     return res.status(200).json(docs);
   }).catch(err => { console.log(err); });
 });
 
 router.all('/stats/sku/:sku/ratings', (req,res) => {
   interMod.skuRatingFn({ sku: { $eq:req.params.sku } }).then(docs => {
-    return res.status(200).json(docs);
-  }).catch(err => { console.log(err); });
-});
-
-router.all('/stats/author/ratings', (req,res) => {
-  interMod.authorRatingFn({}).then(docs => {
     return res.status(200).json(docs);
   }).catch(err => { console.log(err); });
 });
